@@ -32,6 +32,8 @@ class FeatureEngineer:
         use_turbulence=False,
         use_vix=False,
         vix_df=None,
+        use_sentiment=False,
+        sentiment_df=None,
         user_defined_feature=False,
     ):
         self.use_technical_indicator = use_technical_indicator
@@ -39,6 +41,8 @@ class FeatureEngineer:
         self.use_turbulence = use_turbulence
         self.use_vix = use_vix
         self.vix_df = vix_df
+        self.use_sentiment = use_sentiment
+        self.sentiment_df = sentiment_df
         self.user_defined_feature = user_defined_feature
 
     def preprocess_data(self, df):
@@ -61,6 +65,10 @@ class FeatureEngineer:
         if self.use_vix == True:
             df = self.add_vix(df)
             print("Successfully added VIX index")
+
+        if self.use_sentiment == True:
+            df = self.add_sentiment(df)
+            print("Successfully added Sentiment Features")
 
         # add user defined feature
         if self.user_defined_feature == True:
@@ -108,10 +116,10 @@ class FeatureEngineer:
         """
         df = data.copy()
         df["daily_return"] = df.close.pct_change(1)
-        # df['return_lag_1']=df.close.pct_change(2)
-        # df['return_lag_2']=df.close.pct_change(3)
-        # df['return_lag_3']=df.close.pct_change(4)
-        # df['return_lag_4']=df.close.pct_change(5)
+        df['return_lag_1']=df.close.pct_change(2)
+        df['return_lag_2']=df.close.pct_change(3)
+        df['return_lag_3']=df.close.pct_change(4)
+        df['return_lag_4']=df.close.pct_change(5)
         return df
 
     def add_turbulence(self, data):
@@ -139,8 +147,15 @@ class FeatureEngineer:
         df = df.sort_values(["date", "tic"]).reset_index(drop=True)
         return df
 
+    def add_sentiment(self, data):
+        df = data.copy()
+        sentiment = self.sentiment_df
+        df = df.merge(sentiment, on=["date","tic"])
+        df = df.sort_values(["date", "tic"]).reset_index(drop=True)
+        return df
+
     def calculate_turbulence(self, data):
-        """calculate turbulence index based on dow 30"""
+        """calculate turbulence index based on Index"""
         # can add other market assets
         df = data.copy()
         df_price_pivot = df.pivot(index="date", columns="tic", values="close")

@@ -42,6 +42,9 @@ DEFAULT_DATA_COLUMNS = ["date", "tic", "close"]
 ## stockstats technical indicator column names
 ## check https://pypi.org/project/stockstats/ for different names
 TECHNICAL_INDICATORS_LIST = ["macd","boll_ub","boll_lb","rsi_30", "cci_30", "dx_30","close_30_sma","close_60_sma"]
+SENTIMENT_INDICATORS_LIST = ["tweets","news"]
+USER_INDICATORS_LIST = ['daily_return','return_lag_1','return_lag_2','return_lag_3','return_lag_4']
+
 
 
 ## Model Parameters
